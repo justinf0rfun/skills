@@ -1,0 +1,30 @@
+{
+  "name": "@justinforfun/redo-skill",
+  "version": "0.1.0",
+  "description": "Install the redo skill for Codex, Codex CLI, and Claude Code.",
+  "type": "module",
+  "bin": {
+    "redo-skill": "./bin/install.js"
+  },
+  "files": [
+    "bin/",
+    "skills/redo/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node ../../scripts/sync-skill-package.js redo packages/redo-skill",
+    "check": "node --check bin/install.js",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "inquirer": "^9.2.23",
+    "ora": "^8.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT"
+}
