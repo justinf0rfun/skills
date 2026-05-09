@@ -67,7 +67,7 @@ make install
 Build a package by syncing the skill source into the npm package:
 
 ```bash
-make build
+make build SKILL=redo
 ```
 
 Run checks:
@@ -79,13 +79,13 @@ make check
 Preview the npm package contents:
 
 ```bash
-make pack
+make pack SKILL=redo
 ```
 
 Run the installer locally:
 
 ```bash
-make run
+make run SKILL=redo
 ```
 
 Publish:
@@ -93,7 +93,24 @@ Publish:
 ```bash
 npm login
 npm whoami
-make publish
+make publish SKILL=redo
 ```
 
-The `prepack` hook automatically syncs `skills/redo` into `packages/redo-skill` before publishing.
+`make publish SKILL=redo` runs checks and a dry-run pack before publishing `@justinforfun/redo-skill`. You do not need to run `make pack` manually unless you only want to preview the package.
+
+You can also pass the skill name as a positional argument:
+
+```bash
+make publish redo
+```
+
+For another skill, use its skill name:
+
+```bash
+make build SKILL=other
+make pack SKILL=other
+make run SKILL=other
+make publish SKILL=other
+```
+
+The Makefile derives the npm package as `@justinforfun/<skill>-skill`. The `prepack` hook automatically syncs the source skill into its npm package before publishing.

@@ -67,7 +67,7 @@ make install
 构建 package，将 skill 源文件同步进 npm 包：
 
 ```bash
-make build
+make build SKILL=redo
 ```
 
 运行检查：
@@ -79,13 +79,13 @@ make check
 预览 npm 包发布内容：
 
 ```bash
-make pack
+make pack SKILL=redo
 ```
 
 本地运行安装器：
 
 ```bash
-make run
+make run SKILL=redo
 ```
 
 发布：
@@ -93,7 +93,24 @@ make run
 ```bash
 npm login
 npm whoami
-make publish
+make publish SKILL=redo
 ```
 
-发布前 `prepack` 会自动把 `skills/redo` 同步到 `packages/redo-skill`，不需要手动复制。
+`make publish SKILL=redo` 会先运行检查和 dry-run pack，然后发布 `@justinforfun/redo-skill`。不需要手动先执行 `make pack`，除非你只是想预览发布包。
+
+也可以把 skill 名作为位置参数传入：
+
+```bash
+make publish redo
+```
+
+发布其他 skill 时，传入对应 skill 名：
+
+```bash
+make build SKILL=other
+make pack SKILL=other
+make run SKILL=other
+make publish SKILL=other
+```
+
+Makefile 会自动推导 npm 包名为 `@justinforfun/<skill>-skill`。发布前 `prepack` 会自动把 skill 源文件同步到对应 npm package，不需要手动复制。

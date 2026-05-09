@@ -1,24 +1,37 @@
-PACKAGE ?= @justinforfun/redo-skill
+NPM_SCOPE ?= @justinforfun
+SKILL_ARG := $(word 2,$(MAKECMDGOALS))
+ifneq ($(SKILL_ARG),)
+SKILL ?= $(SKILL_ARG)
+endif
+PACKAGE = $(NPM_SCOPE)/$(SKILL)-skill
 
-.PHONY: install build check pack publish run clean
+.PHONY: install build check pack publish run clean require-skill
+
+require-skill:
+ifndef SKILL
+	$(error SKILL is required, for example: make publish SKILL=redo or make publish redo)
+endif
 
 install:
 	npm install
 
-build:
+build: require-skill
 	npm run build -w $(PACKAGE)
 
 check:
 	npm run check
 
-pack:
+pack: require-skill
 	npm pack --dry-run -w $(PACKAGE)
 
-publish:
+publish: require-skill check pack
 	npm publish -w $(PACKAGE) --access public
 
-run:
-	node packages/redo-skill/bin/install.js
+run: require-skill
+	npm run start -w $(PACKAGE)
 
 clean:
-	rm -rf packages/redo-skill/skills node_modules *.tgz
+	rm -rf packages/*/skills node_modules *.tgz
+
+%:
+	@:

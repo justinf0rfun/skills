@@ -134,20 +134,31 @@ make run
 make clean
 ```
 
-After adding another package, ensure `PACKAGE ?= ...` still points to the current primary package or provide a clear override path:
+This repository has no default publish package. Commands that target a specific npm package must require a skill name via `SKILL` or a positional argument:
 
 ```bash
-make pack PACKAGE=@justinforfun/<skill-name>-skill
+make build SKILL=<skill-name>
+make pack SKILL=<skill-name>
+make run SKILL=<skill-name>
+make publish SKILL=<skill-name>
+make publish <skill-name>
 ```
+
+The Makefile derives the npm package as `@justinforfun/<skill-name>-skill`.
 
 ## Release Flow
 
 Before publishing, run at least:
 
 ```bash
-make build
 make check
-make pack
+make pack SKILL=<skill-name>
+```
+
+`make publish SKILL=<skill-name>` must run checks and a dry-run pack before calling `npm publish`.
+
+```bash
+make publish SKILL=<skill-name>
 ```
 
 For first-time publishing or expired npm credentials:
@@ -155,7 +166,7 @@ For first-time publishing or expired npm credentials:
 ```bash
 npm login
 npm whoami
-make publish
+make publish SKILL=<skill-name>
 ```
 
 `make publish` does not log in to npm automatically.
