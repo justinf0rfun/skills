@@ -157,7 +157,7 @@ make publish <skill-name>
 
 The Makefile derives the npm package as `@justinforfun/<skill-name>-skill`.
 
-Version bumps must be explicit. Use `make version <skill-name> BUMP=patch|minor|major` rather than editing package versions by hand.
+`make publish <skill-name>` must automatically run checks, dry-run pack, bump the package version, and publish. The default bump is `patch`; use `BUMP=minor` or `BUMP=major` when needed. Use `make version <skill-name> BUMP=patch|minor|major` only when bumping without publishing.
 
 ## Release Flow
 
@@ -168,7 +168,7 @@ make check
 make pack SKILL=<skill-name>
 ```
 
-`make publish SKILL=<skill-name>` must run checks and a dry-run pack before calling `npm publish`.
+`make publish SKILL=<skill-name>` must run checks, a dry-run pack, `npm version`, and then `npm publish`.
 
 ```bash
 make publish SKILL=<skill-name>

@@ -88,7 +88,7 @@ Run the installer locally:
 make run SKILL=redo
 ```
 
-Update the package version:
+Optionally bump the package version without publishing:
 
 ```bash
 make version redo BUMP=patch
@@ -108,7 +108,16 @@ If npm asks for two-factor authentication during publishing, pass the one-time p
 make publish redo OTP=123456
 ```
 
-`make publish SKILL=redo` runs checks and a dry-run pack before publishing `@justinforfun/redo-skill`. You do not need to run `make pack` manually unless you only want to preview the package.
+`make publish SKILL=redo` runs checks, a dry-run pack, bumps the package version, and then publishes `@justinforfun/redo-skill`. The default version bump is `patch`.
+
+To publish a minor or major version:
+
+```bash
+make publish redo BUMP=minor
+make publish redo BUMP=major
+```
+
+You do not need to run `make version` or `make pack` manually before publishing unless you only want to preview or bump without publishing.
 
 You can also pass the skill name as a positional argument:
 
@@ -122,7 +131,6 @@ For another skill, use its skill name:
 make build SKILL=other
 make pack SKILL=other
 make run SKILL=other
-make version SKILL=other BUMP=patch
 make publish SKILL=other
 ```
 

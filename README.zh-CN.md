@@ -88,7 +88,7 @@ make pack SKILL=redo
 make run SKILL=redo
 ```
 
-更新 package 版本：
+只更新版本但不发布：
 
 ```bash
 make version redo BUMP=patch
@@ -108,7 +108,16 @@ make publish SKILL=redo
 make publish redo OTP=123456
 ```
 
-`make publish SKILL=redo` 会先运行检查和 dry-run pack，然后发布 `@justinforfun/redo-skill`。不需要手动先执行 `make pack`，除非你只是想预览发布包。
+`make publish SKILL=redo` 会先运行检查、dry-run pack、自动升级版本，然后发布 `@justinforfun/redo-skill`。默认版本升级是 `patch`。
+
+如果要发布 minor 或 major 版本：
+
+```bash
+make publish redo BUMP=minor
+make publish redo BUMP=major
+```
+
+发布前不需要手动执行 `make version` 或 `make pack`，除非你只是想预览发布包或只想改版本但不发布。
 
 也可以把 skill 名作为位置参数传入：
 
@@ -122,7 +131,6 @@ make publish redo
 make build SKILL=other
 make pack SKILL=other
 make run SKILL=other
-make version SKILL=other BUMP=patch
 make publish SKILL=other
 ```
 
