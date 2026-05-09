@@ -88,12 +88,24 @@ Run the installer locally:
 make run SKILL=redo
 ```
 
+Update the package version:
+
+```bash
+make version redo BUMP=patch
+```
+
 Publish:
 
 ```bash
 npm login
 npm whoami
 make publish SKILL=redo
+```
+
+If npm asks for two-factor authentication during publishing, pass the one-time password:
+
+```bash
+make publish redo OTP=123456
 ```
 
 `make publish SKILL=redo` runs checks and a dry-run pack before publishing `@justinforfun/redo-skill`. You do not need to run `make pack` manually unless you only want to preview the package.
@@ -110,6 +122,7 @@ For another skill, use its skill name:
 make build SKILL=other
 make pack SKILL=other
 make run SKILL=other
+make version SKILL=other BUMP=patch
 make publish SKILL=other
 ```
 

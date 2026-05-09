@@ -88,12 +88,24 @@ make pack SKILL=redo
 make run SKILL=redo
 ```
 
+更新 package 版本：
+
+```bash
+make version redo BUMP=patch
+```
+
 发布：
 
 ```bash
 npm login
 npm whoami
 make publish SKILL=redo
+```
+
+如果 npm 发布时要求两步验证，传入一次性验证码：
+
+```bash
+make publish redo OTP=123456
 ```
 
 `make publish SKILL=redo` 会先运行检查和 dry-run pack，然后发布 `@justinforfun/redo-skill`。不需要手动先执行 `make pack`，除非你只是想预览发布包。
@@ -110,6 +122,7 @@ make publish redo
 make build SKILL=other
 make pack SKILL=other
 make run SKILL=other
+make version SKILL=other BUMP=patch
 make publish SKILL=other
 ```
 

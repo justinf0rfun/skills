@@ -3,10 +3,21 @@
   "version": "0.1.0",
   "description": "Install the redo skill for Codex, Codex CLI, and Claude Code.",
   "type": "module",
+  "keywords": [
+    "ai",
+    "skill",
+    "codex",
+    "codex-cli",
+    "claude-code",
+    "redo",
+    "reverse-learning",
+    "engineering-tradeoffs"
+  ],
   "bin": {
-    "redo-skill": "./bin/install.js"
+    "redo-skill": "bin/install.js"
   },
   "files": [
+    "README.md",
     "bin/",
     "skills/redo/"
   ],
