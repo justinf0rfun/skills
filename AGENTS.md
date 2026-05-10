@@ -43,6 +43,7 @@ Every skill must include:
 - The body must begin with an English slogan immediately after the frontmatter.
 - The main body should be written in English for a global audience.
 - If a skill can output Chinese or English, default to the user's current conversation language. Only force a language when the user explicitly passes an argument such as `--lang zh` or `--lang en`.
+- Keep localized output examples descriptive, not literal. Do not put full non-English Markdown template blocks in `SKILL.md`; explain in English that headings and labels should be localized instead.
 - Do not add CHANGELOG, INSTALLATION_GUIDE, or similar extra docs inside a skill directory unless the user explicitly asks for them.
 
 `README.md` requirements:

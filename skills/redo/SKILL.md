@@ -36,7 +36,7 @@ redo <topic> [--lang zh|en]
 - `--lang en` forces English output.
 - If `--lang` is absent, respond in the user's current conversation language.
 
-When writing in a non-English language, localize all user-facing headings and field labels. Do not leave template labels such as "Stage", "Debt introduced", "One-sentence version", or "Sources" in English unless the user asked for English.
+The selected output language applies to the entire answer. Localize every user-facing section name, heading, table label, fixed phrase, and summary label into that language. Do not leak English template labels such as "Stage", "Debt introduced", "One-sentence version", "Transferable Pattern", "Counterexample", or "Sources" unless the user asked for English.
 
 ## Evidence Requirements
 
@@ -140,21 +140,6 @@ The cost: <one sentence naming the recurring price>
 **Design-review sentence:** "<one memorable sentence>"
 ```
 
-For Chinese output, localize the same structure:
-
-```markdown
-## 贯穿主线
-
-<一段话讲清楚反复出现的设计哲学>
-
-代价是：<一句话讲清楚反复付出的成本>
-
-| 反复的选择 | 避免了什么 | 增加了什么难度 | 结果 |
-|---|---|---|---|
-
-**能在设计评审中引用的一句话：** "<一句能被复述的话>"
-```
-
 ### 3. Transferable Pattern and Boundaries
 
 After the throughline, add a section that helps the reader generalize the core design idea beyond the topic. This is not a random "similar tools" list. It should identify the reusable engineering philosophy, show where other systems apply the same idea, and show where the idea breaks down.
@@ -179,22 +164,6 @@ Then add a boundary or counterexample table:
 | Counterexample | Why the opposite choice is rational | Boundary rule |
 |---|---|---|
 | <system or system class> | <mechanism-level reason> | <when not to copy the original topic's design> |
-```
-
-For Chinese output, localize the section names and labels:
-
-```markdown
-## 举一反三
-
-<一段话抽出可复用的工程思想>
-
-| 系统 | 怎么复用同一种思想 | 共同约束 | 付出的不同代价 |
-|---|---|---|---|
-
-## 这个模式的边界
-
-| 反例 | 为什么反过来选是合理的 | 边界判断 |
-|---|---|---|
 ```
 
 Generalization quality rules:
@@ -325,7 +294,7 @@ Do not let sources replace reasoning. The main output should remain the decision
 - Use Chinese if the user is writing Chinese, English if the user is writing English, unless `--lang` overrides.
 - If the topic is too broad, choose the core system path and say what you intentionally left out.
 - If the historical record is uncertain, say so and give the most likely interpretation.
-- Match the output language consistently. In Chinese output, use labels such as "阶段", "当时约束", "候选方案", "关键 trade-off", "这个选择埋下的雷", "一句话版本", and "来源" instead of English template labels.
+- Match the output language consistently. For non-English output, translate headings and table labels into the user's language instead of leaking English template labels.
 
 ## Quality Gate
 
