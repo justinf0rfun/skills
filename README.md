@@ -35,6 +35,8 @@ Install:
 npx @justinforfun/redo-skill
 ```
 
+The installer detects Codex, Codex CLI, and Claude Code on the local machine. Detected tools are selected by default; tools that are not detected are left unselected but can still be chosen with confirmation.
+
 Trigger examples:
 
 ```text

@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
+import { execFile } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 import chalk from 'chalk';
@@ -28,7 +29,15 @@ const targets = [
         destination: path.join(os.homedir(), '.agents', 'skills', 'redo')
       }
     ],
-    trigger: '$redo kafka, redo kafka, or select redo from the skill picker'
+    trigger: '$redo kafka, redo kafka, or select redo from the skill picker',
+    detectors: [
+      {
+        type: 'path',
+        value: path.join(os.homedir(), '.agents'),
+        label: '~/.agents'
+      }
+    ],
+    missingReason: 'Codex local skill directory was not detected.'
   },
   {
     id: 'codex-cli',
@@ -41,7 +50,20 @@ const targets = [
         destination: path.join(process.env.CODEX_HOME || path.join(os.homedir(), '.codex'), 'skills', 'redo')
       }
     ],
-    trigger: '$redo kafka, redo kafka, or /skills then choose redo'
+    trigger: '$redo kafka, redo kafka, or /skills then choose redo',
+    detectors: [
+      {
+        type: 'command',
+        value: 'codex',
+        label: 'codex command'
+      },
+      {
+        type: 'path',
+        value: process.env.CODEX_HOME || path.join(os.homedir(), '.codex'),
+        label: process.env.CODEX_HOME ? 'CODEX_HOME' : '~/.codex'
+      }
+    ],
+    missingReason: 'codex command and Codex CLI home directory were not detected.'
   },
   {
     id: 'claude-code',
@@ -59,7 +81,20 @@ const targets = [
         destination: path.join(os.homedir(), '.claude', 'commands', 'redo.md')
       }
     ],
-    trigger: '/redo kafka'
+    trigger: '/redo kafka',
+    detectors: [
+      {
+        type: 'command',
+        value: 'claude',
+        label: 'claude command'
+      },
+      {
+        type: 'path',
+        value: path.join(os.homedir(), '.claude'),
+        label: '~/.claude'
+      }
+    ],
+    missingReason: 'claude command and Claude Code home directory were not detected.'
   }
 ];
 
@@ -116,21 +151,114 @@ async function ensureSourceSkillExists() {
 }
 
 async function promptTargets() {
+  const detectedTargets = await detectTargets();
+  const availableTargets = detectedTargets.filter((target) => target.available);
+
+  if (availableTargets.length === 0) {
+    console.log(chalk.yellow('No supported AI tools were detected. Nothing installed.'));
+    console.log(chalk.dim('Install Codex, Codex CLI, or Claude Code first, then run this installer again.'));
+    return [];
+  }
+
   const answers = await inquirer.prompt([
     {
       type: 'checkbox',
       name: 'targetIds',
       message: 'Select AI tools to install redo for:',
-      choices: targets.map((target) => ({
-        name: `${target.name} ${chalk.dim('- ' + target.description)}`,
+      choices: detectedTargets.map((target) => ({
+        name: formatTargetChoice(target),
         value: target.id,
-        checked: true
+        checked: target.available,
+        disabled: false
       })),
       validate: (values) => (values.length > 0 ? true : 'Select at least one tool.')
     }
   ]);
 
-  return targets.filter((target) => answers.targetIds.includes(target.id));
+  const selectedTargets = detectedTargets.filter((target) => answers.targetIds.includes(target.id));
+  return promptUndetectedTargetConfirmation(selectedTargets);
+}
+
+async function detectTargets() {
+  return Promise.all(
+    targets.map(async (target) => {
+      const detection = await detectTarget(target);
+      return {
+        ...target,
+        ...detection
+      };
+    })
+  );
+}
+
+async function detectTarget(target) {
+  for (const detector of target.detectors) {
+    if (detector.type === 'path' && (await exists(detector.value))) {
+      return {
+        available: true,
+        detectionLabel: detector.label
+      };
+    }
+
+    if (detector.type === 'command' && (await commandExists(detector.value))) {
+      return {
+        available: true,
+        detectionLabel: detector.label
+      };
+    }
+  }
+
+  return {
+    available: false,
+    detectionLabel: null
+  };
+}
+
+function formatTargetChoice(target) {
+  const description = chalk.dim('- ' + target.description);
+
+  if (target.available) {
+    return `${target.name} ${description} ${chalk.green('(detected: ' + target.detectionLabel + ')')}`;
+  }
+
+  return `${target.name} ${description} ${chalk.yellow('(not detected)')}`;
+}
+
+async function commandExists(command) {
+  const lookupCommand = process.platform === 'win32' ? 'where' : 'which';
+
+  return new Promise((resolve) => {
+    execFile(lookupCommand, [command], (error) => {
+      resolve(!error);
+    });
+  });
+}
+
+async function promptUndetectedTargetConfirmation(selectedTargets) {
+  const confirmedTargets = [];
+
+  for (const target of selectedTargets) {
+    if (target.available) {
+      confirmedTargets.push(target);
+      continue;
+    }
+
+    const destinationSummary = target.tasks.map((task) => task.destination).join(', ');
+    const answers = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'installAnyway',
+        message: `${target.name} was not detected. Install to ${destinationSummary} anyway?`,
+        default: false
+      }
+    ]);
+
+    if (answers.installAnyway) {
+      confirmedTargets.push(target);
+    }
+  }
+
+  return confirmedTargets;
 }
 
 async function promptConflictActions(plan) {

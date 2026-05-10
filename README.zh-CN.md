@@ -35,6 +35,8 @@ scripts/                 # 构建和同步脚本
 npx @justinforfun/redo-skill
 ```
 
+安装器会检测本机是否存在 Codex、Codex CLI 和 Claude Code。检测到的工具会默认选中；未检测到的工具默认不选，但仍可选择。选择未检测到的工具时，安装器会先确认再写入默认目录。
+
 触发方式：
 
 ```text

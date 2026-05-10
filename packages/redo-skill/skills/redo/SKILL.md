@@ -36,6 +36,8 @@ redo <topic> [--lang zh|en]
 - `--lang en` forces English output.
 - If `--lang` is absent, respond in the user's current conversation language.
 
+When writing in a non-English language, localize all user-facing headings and field labels. Do not leave template labels such as "Stage", "Debt introduced", "One-sentence version", or "Sources" in English unless the user asked for English.
+
 ## Evidence Requirements
 
 For real technologies, do not rely only on memory when dates, versions, authorship, current status, or historical claims matter.
@@ -45,6 +47,7 @@ For real technologies, do not rely only on memory when dates, versions, authorsh
 - Distinguish sourced facts from inference. It is acceptable to infer engineering motivations, but label them as inference when the source does not explicitly say so.
 - Prefer primary sources over secondary commentary. Good sources include official docs, release notes, KIPs/RFCs/PEPs/design proposals, original papers, maintainers' posts, and authoritative engineering retrospectives.
 - Research relevant papers separately when the topic has an academic or foundational design lineage. Papers often explain why the original abstraction was plausible, what constraints the designers optimized for, and which trade-offs were known from the beginning. Do not only search release notes and blog posts.
+- Avoid weak secondary sources when primary sources exist. Do not cite SEO summaries, generic tutorials, or casual comparison posts for core historical claims if official design docs, papers, or maintainer explanations are available.
 - Avoid source dumping. Cite the key sources used, and when useful, say which stages they support.
 
 ## Output Contract
@@ -59,7 +62,11 @@ Then produce the sections below.
 
 ### 1. Evolution Stages
 
-Choose stages by engineering decision pressure, not by release chronology. For mature infrastructure, databases, runtimes, frameworks, languages, and major tools, a good answer usually has 7-9 stages. Do not compress a major "debt repayment" stage into the debt map if it changed how users operate the system.
+Choose stages by engineering decision pressure, not by release chronology. Causal order is more important than strict release order, but time should generally move forward. If a later concern appears before an earlier release, explain why the causal dependency is being presented that way.
+
+For mature infrastructure, databases, runtimes, frameworks, languages, and major tools, a good answer usually has 7-9 stages. Do not compress a major "debt repayment" stage into the debt map if it changed how users operate the system. If you use more than 8 stages, the extra stage must earn its place by explaining a current frontier, current user-facing pain, or important debt repayment that would otherwise be invisible.
+
+A stage can be a partial mitigation, not only a new feature. If a prior debt became painful at scale and later received a named fix, protocol change, runtime change, scheduler change, storage change, migration path, or operational redesign, make that fix its own stage. Do not hide it only in the debt map.
 
 For mature systems, check whether the stage list covers these arcs where relevant:
 
@@ -68,6 +75,7 @@ For mature systems, check whether the stage list covers these arcs where relevan
 - Coordination, metadata, scheduling, ownership, or state management.
 - Semantics/correctness guarantees.
 - Ecosystem or higher-level abstraction.
+- Major mitigation of a previously introduced operational pain.
 - Scale, cloud-native, elasticity, or operations.
 - Cost/storage/performance pressure.
 - Current unresolved frontier.
@@ -98,6 +106,8 @@ Stage quality rules:
 - The chosen option must say why it was rational under the constraints of that stage, even if it later caused problems.
 - The rejected options must be plausible choices real engineers would have considered.
 - The debt line must create a traceable debt ID such as D1, D2, D3. Reuse these IDs in the debt map.
+- Use clean top-level debt IDs: D1, D2, D3, and so on. If one stage introduces multiple meaningful debts, assign the next clean IDs instead of ad-hoc labels such as D2-4 or D3b.
+- When a stage primarily repays earlier debt, explicitly say which debt IDs it repays and what new debt it introduces.
 - Avoid hindsight moralizing. The point is to recreate the decision pressure, not to mock past designs.
 
 ### 2. Throughline
@@ -115,17 +125,52 @@ Then add:
 |---|---|---|---|
 ```
 
-The throughline should produce a sentence the reader can repeat in a design review.
+Use this structure so the section is stable:
+
+```markdown
+## Throughline
+
+<one paragraph naming the recurring philosophy>
+
+The cost: <one sentence naming the recurring price>
+
+| Repeated choice | What it avoided | What it made harder | Outcome |
+|---|---|---|---|
+
+**Design-review sentence:** "<one memorable sentence>"
+```
+
+For Chinese output, localize the same structure:
+
+```markdown
+## 贯穿主线
+
+<一段话讲清楚反复出现的设计哲学>
+
+代价是：<一句话讲清楚反复付出的成本>
+
+| 反复的选择 | 避免了什么 | 增加了什么难度 | 结果 |
+|---|---|---|---|
+
+**能在设计评审中引用的一句话：** "<一句能被复述的话>"
+```
 
 ### 3. Debt Map
 
-Create two tables. Use the debt IDs introduced in the stages.
+Create three tables. Use the debt IDs introduced in the stages. A debt is "resolved" only when the original failure mode is structurally removed or no longer a normal user concern. If a later design reduces blast radius, frequency, or operational cost but the pain can still appear, put it under "mitigated", not "resolved".
 
 Resolved debt:
 
 ```markdown
 | Debt ID | Debt | Introduced in | Resolved in | Resolution |
 |---|---|---|---|---|
+```
+
+Mitigated debt:
+
+```markdown
+| Debt ID | Debt | Introduced in | Mitigated in | What improved | What remains |
+|---|---|---|---|---|---|
 ```
 
 Unresolved debt:
@@ -137,7 +182,7 @@ Unresolved debt:
 
 Debt map quality rules:
 
-- The map must explain "introduced in stage X, resolved in stage Y" where applicable.
+- The map must explain "introduced in stage X, resolved or mitigated in stage Y" where applicable.
 - Do not list only abstract categories like "operational complexity". Name the concrete failure mode users feel.
 - Include important unresolved operational pain even if it came from an omitted or secondary stage, but label it clearly.
 
@@ -157,6 +202,9 @@ Ranking quality rules:
 - Prefer production symptoms over abstract labels: "rebalance storms", "cold-read latency", "schema migration pain", "dependency hell", "slow compile times", "state restore time", "version skew".
 - The one-line explanation should describe what users observe during failure or scale, not just why the architecture is complex.
 - Competitive attack angles should be concrete. Name a class of alternative system or a known competitor only when the comparison is fair.
+- Do not overclaim in competitive comparisons. If an alternative avoids one pain by accepting another trade-off, state that trade-off briefly instead of implying it is strictly better.
+- Phrase attack angles as trade-off-aware comparisons: "X can attack this by doing Y, but pays Z." Avoid claims like "X does not have this problem" unless a primary source or well-established mechanism supports it.
+- If the comparison would be shallow or unfair, write "N/A" rather than forcing a competitor into the table.
 
 ### 5. Causal Chain
 
@@ -190,14 +238,28 @@ This sentence should be conversational, sharp, and technically accurate.
 
 ### 6. Sources
 
-If online verification was used, end with a short source list. Prefer 6-10 high-signal sources over a long bibliography. When possible, group sources by what they support:
+If online verification was used, end with a short source list. Prefer 6-10 high-signal sources over a long bibliography. Split sources into primary and secondary groups. Use secondary sources only when they add useful synthesis or operational perspective, and keep them to at most two items. Do not use a secondary source for a core mechanism when an official design doc, release note, RFC, KIP, PEP, paper, or maintainer explanation exists.
+
+Use this format:
 
 ```markdown
+Primary sources:
+
 - Foundational papers: <source>
 - Stage 2 replication: <source>
 - Stage 5 correctness semantics: <source>
 - Current pain points: <source>
+
+Secondary sources (optional, max 2):
+
+- Operational retrospective or synthesis: <source>
 ```
+
+Source quality rules:
+
+- Every major stage should be supported by at least one primary source when online verification is available.
+- If an important claim is inferred from multiple sources rather than directly stated, mark it as inference in the analysis.
+- Do not cite generic tutorials, SEO summaries, or casual comparison posts for mechanism, history, or version claims.
 
 Do not let sources replace reasoning. The main output should remain the decision tree and debt map.
 
@@ -212,6 +274,7 @@ Do not let sources replace reasoning. The main output should remain the decision
 - Use Chinese if the user is writing Chinese, English if the user is writing English, unless `--lang` overrides.
 - If the topic is too broad, choose the core system path and say what you intentionally left out.
 - If the historical record is uncertain, say so and give the most likely interpretation.
+- Match the output language consistently. In Chinese output, use labels such as "阶段", "当时约束", "候选方案", "关键 trade-off", "这个选择埋下的雷", "一句话版本", and "来源" instead of English template labels.
 
 ## Quality Gate
 
@@ -219,11 +282,13 @@ Before finalizing, check the answer against these questions:
 
 - Could a reader infer the system's evolution from stage 1 to today by following only the trade-offs?
 - Did you include major debt repayment stages, not just feature releases?
+- Did you include major partial-mitigation stages when a painful debt later received an important fix?
 - Does every stage have plausible rejected alternatives and a rational chosen path?
 - Are the pain points concrete production symptoms rather than broad categories?
 - Does every resolved or unresolved debt connect back to a stage or debt ID?
 - Is the throughline sharp enough to quote in one sentence?
 - Are sources high-signal and tied to the claims they support?
+- Is the language of headings, labels, and section names consistent with the user's language?
 
 ## Tool-Specific Invocation Notes
 

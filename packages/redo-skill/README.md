@@ -16,6 +16,8 @@ The installer supports:
 - Codex CLI
 - Claude Code
 
+The installer detects supported tools on the local machine. Detected tools are selected by default; tools that are not detected are left unselected but can still be chosen. If you choose an undetected tool, the installer asks for confirmation before writing to its default directory.
+
 ## Invocation
 
 ```text
