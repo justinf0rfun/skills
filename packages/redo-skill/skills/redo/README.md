@@ -46,6 +46,8 @@ For each technology, `redo` reconstructs:
 - Candidate options and their costs
 - Why the chosen design won
 - Key trade-offs
+- Transferable design patterns in sibling systems
+- Boundary cases and counterexamples
 - Technical debt introduced
 - Debt that was later resolved
 - Pain points that still remain

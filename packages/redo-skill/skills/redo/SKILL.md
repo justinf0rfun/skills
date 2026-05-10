@@ -155,7 +155,58 @@ For Chinese output, localize the same structure:
 **能在设计评审中引用的一句话：** "<一句能被复述的话>"
 ```
 
-### 3. Debt Map
+### 3. Transferable Pattern and Boundaries
+
+After the throughline, add a section that helps the reader generalize the core design idea beyond the topic. This is not a random "similar tools" list. It should identify the reusable engineering philosophy, show where other systems apply the same idea, and show where the idea breaks down.
+
+Use this structure:
+
+```markdown
+## Transferable Pattern
+
+<one paragraph naming the reusable idea, such as "delegate caching to the operating system", "make the log the source of truth", or "push coordination into a control plane">
+
+| System | How it uses the same idea | Shared constraint | Different price |
+|---|---|---|---|
+| <system> | <specific mechanism> | <why the same idea fits> | <what this system pays instead> |
+```
+
+Then add a boundary or counterexample table:
+
+```markdown
+## Where This Pattern Stops
+
+| Counterexample | Why the opposite choice is rational | Boundary rule |
+|---|---|---|
+| <system or system class> | <mechanism-level reason> | <when not to copy the original topic's design> |
+```
+
+For Chinese output, localize the section names and labels:
+
+```markdown
+## 举一反三
+
+<一段话抽出可复用的工程思想>
+
+| 系统 | 怎么复用同一种思想 | 共同约束 | 付出的不同代价 |
+|---|---|---|---|
+
+## 这个模式的边界
+
+| 反例 | 为什么反过来选是合理的 | 边界判断 |
+|---|---|---|
+```
+
+Generalization quality rules:
+
+- Compare mechanisms, not product categories. "Both rely on OS page cache for immutable segment-like files" is useful; "both are data systems" is not.
+- Include 3-5 sibling systems when there is a real shared principle. If fewer than 3 are defensible, use fewer and explain why.
+- Include at least one counterexample or boundary class when the pattern has a meaningful opposite design. The counterexample should make the original idea clearer, not just criticize another system.
+- Every sibling or counterexample must name the condition that makes the design work or fail: immutable files, append-only logs, random updates, strict transaction control, latency tail sensitivity, memory ownership, coordination scope, compatibility pressure, and so on.
+- Do not imply the original topic's design is universally superior. The goal is "when to copy this idea" and "when not to copy it".
+- For specific comparisons to real systems, verify with primary or high-authority sources when online verification is available.
+
+### 4. Debt Map
 
 Create three tables. Use the debt IDs introduced in the stages. A debt is "resolved" only when the original failure mode is structurally removed or no longer a normal user concern. If a later design reduces blast radius, frequency, or operational cost but the pain can still appear, put it under "mitigated", not "resolved".
 
@@ -186,7 +237,7 @@ Debt map quality rules:
 - Do not list only abstract categories like "operational complexity". Name the concrete failure mode users feel.
 - Include important unresolved operational pain even if it came from an omitted or secondary stage, but label it clearly.
 
-### 4. Pain Point Ranking
+### 5. Pain Point Ranking
 
 Rank the top unresolved problems that users still feel today.
 
@@ -206,7 +257,7 @@ Ranking quality rules:
 - Phrase attack angles as trade-off-aware comparisons: "X can attack this by doing Y, but pays Z." Avoid claims like "X does not have this problem" unless a primary source or well-established mechanism supports it.
 - If the comparison would be shallow or unfair, write "N/A" rather than forcing a competitor into the table.
 
-### 5. Causal Chain
+### 6. Causal Chain
 
 End with a causal chain that makes the evolution memorable. For complex systems, use an ASCII story map rather than a flat paragraph:
 
@@ -236,7 +287,7 @@ After the chain, add a bold one-sentence version:
 
 This sentence should be conversational, sharp, and technically accurate.
 
-### 6. Sources
+### 7. Sources
 
 If online verification was used, end with a short source list. Prefer 6-10 high-signal sources over a long bibliography. Split sources into primary and secondary groups. Use secondary sources only when they add useful synthesis or operational perspective, and keep them to at most two items. Do not use a secondary source for a core mechanism when an official design doc, release note, RFC, KIP, PEP, paper, or maintainer explanation exists.
 
@@ -287,6 +338,7 @@ Before finalizing, check the answer against these questions:
 - Are the pain points concrete production symptoms rather than broad categories?
 - Does every resolved or unresolved debt connect back to a stage or debt ID?
 - Is the throughline sharp enough to quote in one sentence?
+- Does the transferable-pattern section show where the core idea works in other systems and where it stops?
 - Are sources high-signal and tied to the claims they support?
 - Is the language of headings, labels, and section names consistent with the user's language?
 

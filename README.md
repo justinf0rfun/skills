@@ -27,6 +27,8 @@ Instead of giving a feature tour, it asks:
 - What did each option cost?
 - Why did the chosen design win at that time?
 - What technical debt did it introduce?
+- Where does the same design idea appear in sibling systems?
+- Where does the idea stop working?
 - Which debts were later fixed, and which still shape the tool today?
 
 Install:
