@@ -1,6 +1,6 @@
 {
   "name": "@justinforfun/redo-skill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Install the redo skill for Codex, Codex CLI, and Claude Code.",
   "type": "module",
   "keywords": [
