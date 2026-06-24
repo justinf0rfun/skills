@@ -18,7 +18,7 @@ The root package is private. Each installable skill is published from its own pa
 
 ### redo
 
-`redo` helps you reverse-learn a programming technology, framework, tool, or infrastructure system by reconstructing how it evolved through real engineering constraints.
+`redo` helps you reverse-learn a programming technology, framework, tool, or infrastructure system by reconstructing how it evolved through real engineering constraints. It can also turn a topic or existing redo artifact into a senior-engineer learning plan.
 
 Instead of giving a feature tour, it asks:
 
@@ -47,6 +47,15 @@ Codex: $redo kafka, redo kafka, or select redo from the skill picker
 Codex CLI: $redo kafka, redo kafka, or /skills then choose redo
 ```
 
+Learning plan examples:
+
+```text
+redo kafka --plan
+redo kafka --plan --brief
+redo plan kafka.md
+redo plan kafka.md --days 5 --daily 30m --role infra --depth deep
+```
+
 Language:
 
 - By default, `redo` replies in the user's current conversation language.
@@ -59,6 +68,13 @@ Examples:
 redo react --lang en
 $redo docker --lang zh
 ```
+
+Learning plans:
+
+- `redo <topic> --plan` creates a compact redo summary plus a senior-engineer learning plan.
+- `redo plan <artifact.md>` creates a plan from an existing redo artifact.
+- `--brief` creates a one-page-scan 90-minute plan.
+- Plans train engineering judgment: constraints, trade-offs, debt tracing, transferable patterns, boundaries, and design-review explanations.
 
 ## Development
 

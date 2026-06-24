@@ -1,17 +1,19 @@
 ---
 name: redo
-description: Reverse-learn any programming technology, framework, tool, or infrastructure system by reconstructing its evolution as a sequence of real engineering constraints, candidate designs, trade-offs, technical debt, later fixes, and unresolved pain points. Use this skill when the user asks with /redo, redo, $redo, reverse learn, retrace, re-derive, or asks to understand why a technology evolved the way it did.
+description: Reverse-learn any programming technology, framework, tool, or infrastructure system by reconstructing its evolution as a sequence of real engineering constraints, candidate designs, trade-offs, technical debt, later fixes, and unresolved pain points. Use this skill when the user asks with /redo, redo, $redo, reverse learn, retrace, re-derive, asks to understand why a technology evolved the way it did, or asks to turn a redo artifact into a senior-engineer learning plan.
 ---
 
 > Every mature system is a fossil record of the constraints it survived.
 
 # Redo
 
-Redo is a reverse-learning skill for understanding a technology as if you were one of the engineers who evolved it from zero to today. Do not write a feature tour, timeline summary, or encyclopedia article. Reconstruct the path of necessity: what problem existed at each stage, what options were available, why the chosen design won, what trade-off it accepted, and what debt it left behind.
+Redo is a reverse-learning skill for understanding a technology as if you were one of the engineers who evolved it from zero to today. Do not write a feature tour, timeline summary, encyclopedia article, or interview-prep study guide. Reconstruct the path of necessity: what problem existed at each stage, what options were available, why the chosen design won, what trade-off it accepted, and what debt it left behind.
 
 ## Trigger Patterns
 
 Use this skill when the user asks to reverse-learn, redo, re-derive, reconstruct, or deeply understand a programming technology, framework, language, database, infrastructure system, protocol, build tool, runtime, AI tool, or developer platform.
+
+Also use this skill when the user asks to create a learning plan, study plan, or senior-engineer practice plan from a redo artifact or from a topic using redo's philosophy.
 
 Explicit examples:
 
@@ -19,9 +21,15 @@ Explicit examples:
 - `$redo kafka`
 - `redo kafka`
 - `redo kafka --lang en`
+- `redo kafka --plan`
+- `redo kafka --plan --brief`
+- `redo kafka --plan --include-analysis`
+- `redo plan kafka.md`
+- `redo plan`
 - `Reverse-learn Kafka`
 - `Retrace React's evolution path`
 - `Explain Docker by retracing its engineering decisions`
+- `Create a learning plan from this redo artifact`
 
 ## Arguments
 
@@ -29,9 +37,22 @@ Parse the request as:
 
 ```text
 redo <topic> [--lang zh|en]
+redo <topic> --plan [--brief] [--days <number>] [--daily <duration>] [--role <role>] [--depth standard|deep] [--include-analysis] [--lang zh|en]
+redo plan [<artifact-path>] [--brief] [--days <number>] [--daily <duration>] [--role <role>] [--depth standard|deep] [--lang zh|en]
 ```
 
 - `<topic>` is the technology, tool, or system to analyze.
+- `redo plan` creates a learning plan from an existing redo artifact. The artifact may be a file path, pasted content, or the most recent redo artifact in the conversation.
+- If both an artifact path and pasted artifact content are present, prefer the pasted content because it reflects what the user wants planned now.
+- If an artifact path is provided and tools can read it, read the file before planning. Do not infer artifact contents from the filename.
+- If `redo plan` has no path, no pasted content, and no recent redo artifact in the conversation, ask the user for a topic, artifact path, or pasted redo artifact.
+- `--plan` switches `redo <topic>` into learning-plan mode.
+- `--include-analysis` with `--plan` outputs the full redo analysis before the learning plan. Without it, output only a compact redo summary plus the plan.
+- `--brief` outputs a one-page-scan learning plan. It implies a 90-minute plan unless `--daily` overrides it.
+- `--days <number>` sets the plan length. Default: `7`.
+- `--daily <duration>` sets the daily time budget, such as `30m`, `45m`, or `90m`. Default: `45m`.
+- `--role <role>` tunes emphasis for the learner's role. Default: `senior-engineer`. Common roles include `backend`, `frontend`, `infra`, `architect`, and `manager`.
+- `--depth standard` is the default. `--depth deep` adds source verification and at most two source-code or hands-on verification tasks tied to a specific trade-off, debt, boundary, or failure mode.
 - `--lang zh` forces Chinese output.
 - `--lang en` forces English output.
 - If `--lang` is absent, respond in the user's current conversation language.
@@ -283,6 +304,248 @@ Source quality rules:
 
 Do not let sources replace reasoning. The main output should remain the decision tree and debt map.
 
+## Learning Plan Mode
+
+Learning-plan mode turns a redo analysis into an execution plan for experienced engineers. It must not become an interview-prep checklist, component inventory, API reading list, or generic study schedule. The goal is engineering judgment training: constraint recognition, trade-off reasoning, debt tracing, pattern transfer, boundary recognition, and design-review explanation.
+
+Learning-plan mode is triggered by `--plan`, `redo plan`, or a natural-language request to create a learning plan from a redo artifact.
+
+Normal redo output must not change unless learning-plan mode is requested.
+
+### Input Modes
+
+Support these input paths:
+
+- `redo <topic> --plan`: generate a compact redo summary and a learning plan.
+- `redo <topic> --plan --include-analysis`: generate the full redo analysis first, then the learning plan.
+- `redo plan <artifact-path>`: read the redo artifact and generate an artifact-based learning plan.
+- `redo plan` with a recent redo artifact in the conversation: use that artifact.
+- Pasted redo artifact: use the pasted content. If both pasted content and a file path exist, prefer pasted content.
+
+For `redo plan <artifact-path>`, read the file when the environment can access it. If the file cannot be read, ask the user to provide the artifact path again or paste the artifact. Never guess the artifact's content from its filename.
+
+### Evidence and Sources in Plan Mode
+
+If planning from a topic, follow the normal redo evidence rules before producing the compact summary and plan.
+
+If planning from an artifact:
+
+- Prefer the artifact's Sources section as the trusted reading base.
+- If a plan step needs missing sources and web access is available and not forbidden, query primary or high-authority sources.
+- Do not recommend generic tutorials, SEO posts, interview-prep articles, or undifferentiated reading lists.
+- If online verification is unavailable, blocked, or forbidden, state that no fresh source verification was performed.
+
+Sources are supporting material, not the plan itself. Every source recommendation must attach to a concrete exercise or required output.
+
+### Compact Redo Summary
+
+For `redo <topic> --plan` without `--include-analysis`, begin with a compact summary of at most five bullets:
+
+```markdown
+## Compact Redo Summary
+
+- Core constraint:
+- Recurring trade-off:
+- Most important debt:
+- Transferable pattern:
+- Boundary rule:
+```
+
+Do not turn this into a mini redo analysis. It is only an anchor for the learning plan.
+
+Because the full redo artifact is not shown in this mode, do not reference hidden sections as if the learner can inspect them. Use the compact summary as the visible anchor, and make early exercises reconstruct the missing Throughline, stage decisions, Debt Map, Transferable Pattern, and Boundary Rule. If the user wants a plan bound to visible full sections, tell them to use `--include-analysis` or `redo plan <artifact>`.
+
+For `redo plan <artifact>` and `redo plan` from an existing artifact, do not output a compact summary by default. Output short artifact assumptions instead.
+
+### Artifact Assumptions and Gaps
+
+When planning from an existing artifact, include a short assumptions section:
+
+```markdown
+## Artifact Assumptions
+
+- <how the plan treats the Throughline>
+- <how the plan uses the Debt Map>
+- <how the plan uses Sources or notes missing sources>
+```
+
+If the artifact is incomplete, include:
+
+```markdown
+## Artifact Gaps
+
+Critical gaps:
+- <missing Throughline, Evolution Stages, or Debt Map>
+
+Useful gaps:
+- <missing Sources, Transferable Pattern, Boundaries, Pain Point Ranking, or Causal Chain>
+```
+
+Critical gaps are gaps that can make the plan drift away from redo's philosophy. Useful gaps improve quality but can be reconstructed during the plan.
+
+Do not reject an incomplete artifact by default. Produce a repair-oriented plan that first reconstructs the missing pieces.
+
+### Standard Plan Output
+
+Default plan settings:
+
+- `--days 7`
+- `--daily 45m`
+- `--role senior-engineer`
+- `--depth standard`
+
+Use this structure:
+
+```markdown
+## Learning Goal
+
+## Assumptions
+
+## How To Use This Redo Artifact Or Summary
+
+## Plan Overview
+
+## 7-Day Plan
+
+### Day 1: <cognitive focus>
+
+- Focus:
+- Use from redo artifact:
+- Exercise:
+- Required output:
+- Self-check:
+
+## Apply To Your Own System
+
+## Review Rubric
+
+## Anti-Rote Rules
+```
+
+Each day must have all five fields:
+
+- `Focus`: the judgment skill being trained.
+- `Use from redo artifact`: specific sections to inspect, such as Throughline, Evolution Stages, Debt Map, Transferable Pattern, Where This Pattern Stops, Pain Point Ranking, Causal Chain, or Sources.
+- `Exercise`: an active practice task. Prefer prediction-before-reading: make the learner choose, explain, or predict first, then compare with the artifact.
+- `Required output`: a concrete artifact the learner must produce.
+- `Self-check`: a test of whether the learner can explain the judgment, not whether they memorized facts.
+
+Bind the plan to the visible redo material. If a full artifact is visible, a good plan says things like "Use the Throughline section", "Use Stage 2 and Stage 3", "Use the Debt Map", "Use Transferable Pattern", "Use Where This Pattern Stops", and "Use the Causal Chain". If only a compact summary is visible, do not cite hidden sections; make the plan reconstruct the missing sections as required outputs. If a visible artifact is missing a section, the plan should say which day reconstructs it.
+
+For a 7-day default plan, use this cognitive sequence unless the artifact demands a better order:
+
+1. Core tension and throughline.
+2. Stage decisions and rejected options.
+3. Technical debt map.
+4. Debt repayment and mitigation path.
+5. Transferable patterns in sibling systems.
+6. Boundaries and counterexamples.
+7. Apply the pattern to the learner's own system and write design-review sentences.
+
+Adjust intensity to the time budget:
+
+- Short daily budgets should require smaller outputs: one sharp sentence, one small table, one boundary rule.
+- Longer daily budgets can require richer outputs: a decision table, source verification, or a short design memo.
+
+### Brief Plan Output
+
+`--brief` produces a one-page-scan plan, not a day-by-day plan. It defaults to 90 minutes unless `--daily` overrides it.
+
+Use this structure:
+
+```markdown
+## Learning Goal
+
+## 90-Minute Path
+
+| Step | Time | What to inspect | Exercise | Required output |
+|---|---:|---|---|---|
+
+## Must-Produce Outputs
+
+## What Not To Memorize
+
+## Final Self-Check
+```
+
+The path must preserve redo's minimum cognitive loop:
+
+```text
+core tension -> stage decisions -> debt -> transfer -> boundary -> design-review sentence
+```
+
+Do not include a long stage-by-stage plan in brief mode.
+
+### Role and Depth
+
+Use `--role` to tune emphasis without changing the core philosophy:
+
+- `backend`: APIs, throughput, correctness boundaries, data flow, integration cost.
+- `frontend`: state models, rendering or interaction constraints, compatibility, developer experience.
+- `infra`: reliability, replication, operations, capacity, failure modes.
+- `architect`: long-term evolution, boundaries, migration cost, organizational debt.
+- `manager`: team cognition, platform governance, migration risk, communication.
+- `senior-engineer`: balanced default.
+
+Use `--depth deep` for research-grade plans. Deep mode should add:
+
+- Primary source verification where the artifact's sources are weak or missing.
+- At most two source-code or hands-on verification tasks.
+- A one-page design-review memo or equivalent final output.
+- A stronger "apply to your own system" exercise.
+
+Even in deep mode, source-code or hands-on work must verify a specific trade-off, debt, boundary, or failure mode. Do not produce a source-reading roadmap.
+
+### Required Outputs
+
+Every plan must require outputs that force the learner to think:
+
+- A core-constraint sentence.
+- A recurring-trade-off sentence.
+- A decision table for one or more stages.
+- A debt trace from introduction to mitigation, resolution, or current pain.
+- A sibling-system comparison.
+- A boundary rule or counterexample.
+- Three design-review sentences:
+  1. The core constraint.
+  2. The recurring trade-off.
+  3. The boundary rule.
+
+Do not produce a plan whose only outputs are "read", "review", "understand", or "summarize".
+
+### Apply To Your Own System
+
+Every standard plan must include an application module. Ask the learner to choose a system, service, module, or platform they work on and write:
+
+- Its current constraint.
+- The design choice it made.
+- The debt it introduced.
+- A sibling pattern from the studied system.
+- A boundary warning: where copying would be wrong.
+
+This module is mandatory because redo is meant to train system-design judgment, not passive knowledge acquisition.
+
+### Review Rubric
+
+Every standard plan must include a rubric. Use questions like:
+
+1. Can the learner explain the core constraint without naming components?
+2. Can the learner defend at least two major design choices under their historical constraints?
+3. Can the learner trace at least three debts from introduction to mitigation, resolution, or current pain?
+4. Can the learner name sibling systems that share the same idea and explain the different price they pay?
+5. Can the learner state when not to copy this design?
+
+### Anti-Rote Rules
+
+Every standard plan must include anti-rote rules:
+
+- Do not memorize component lists.
+- Do not turn stages into interview Q&A.
+- Do not study APIs before understanding the constraints that made them necessary.
+- Do not produce a reading-list plan.
+- Do not append generic follow-up prompts unless the user asks.
+- Every session must produce at least one trade-off explanation, debt trace, boundary rule, sibling-system comparison, or design-review sentence.
+
 ## Style
 
 - Write like a senior engineer explaining architecture history to another engineer.
@@ -310,6 +573,10 @@ Before finalizing, check the answer against these questions:
 - Does the transferable-pattern section show where the core idea works in other systems and where it stops?
 - Are sources high-signal and tied to the claims they support?
 - Is the language of headings, labels, and section names consistent with the user's language?
+- If learning-plan mode was requested, is the plan training engineering judgment rather than memorization?
+- If learning-plan mode was requested, does every day or brief step have a required output?
+- If learning-plan mode was requested, is the plan bound to redo artifact sections instead of becoming a generic study schedule?
+- If learning-plan mode was requested from an incomplete artifact, did you identify critical and useful gaps before planning?
 
 ## Tool-Specific Invocation Notes
 

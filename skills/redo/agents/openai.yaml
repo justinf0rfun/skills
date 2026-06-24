@@ -1,4 +1,4 @@
 interface:
   display_name: "Redo"
-  short_description: "Reverse-learn systems through trade-offs"
-  default_prompt: "Use $redo to reverse-learn Kafka through its engineering constraints, trade-offs, debt, and unresolved pain points."
+  short_description: "Reverse-learn systems and plan senior-engineer practice"
+  default_prompt: "Use $redo to reverse-learn Kafka through its engineering constraints, trade-offs, debt, unresolved pain points, and senior-engineer learning plan."

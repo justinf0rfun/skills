@@ -18,7 +18,7 @@ scripts/                 # 构建和同步脚本
 
 ### redo
 
-`redo` 用来反向学习一门编程技术、框架、工具或基础设施系统。它会把一个成熟技术拆回早期阶段，重走它在真实工程约束下的演进路线。
+`redo` 用来反向学习一门编程技术、框架、工具或基础设施系统。它会把一个成熟技术拆回早期阶段，重走它在真实工程约束下的演进路线，也可以基于 topic 或已有 redo 产物生成面向资深研发的学习计划。
 
 它不会只介绍功能，而是追问：
 
@@ -47,6 +47,15 @@ Codex: $redo kafka、redo kafka，或在 skill picker 里选择 redo
 Codex CLI: $redo kafka、redo kafka，或 /skills 后选择 redo
 ```
 
+学习计划示例：
+
+```text
+redo kafka --plan
+redo kafka --plan --brief
+redo plan kafka.md
+redo plan kafka.md --days 5 --daily 30m --role infra --depth deep
+```
+
 语言：
 
 - 默认跟随用户当前对话语言。
@@ -59,6 +68,13 @@ Codex CLI: $redo kafka、redo kafka，或 /skills 后选择 redo
 redo react --lang en
 $redo docker --lang zh
 ```
+
+学习计划：
+
+- `redo <topic> --plan` 会生成紧凑 redo 摘要和面向资深研发的学习计划。
+- `redo plan <artifact.md>` 会基于已有 redo 产物制定学习计划。
+- `--brief` 会生成一页纸快速扫一眼的 90 分钟计划。
+- 学习计划训练的是工程判断力：约束识别、取舍分析、技术债追踪、思想迁移、边界判断和设计评审表达。
 
 ## 开发
 
