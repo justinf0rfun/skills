@@ -76,6 +76,31 @@ Learning plans:
 - `--brief` creates a one-page-scan 90-minute plan.
 - Plans train engineering judgment: constraints, trade-offs, debt tracing, transferable patterns, boundaries, and design-review explanations.
 
+### soap
+
+**Friction happens.Soap it.**
+
+SOAP reviews a development task across requirements, design, implementation, and verification. It traces avoidable friction to evidence and proposes scoped improvements, without ratings or a task-type questionnaire. An external AI SDLC platform owns adoption and effectiveness tracking.
+
+- Codex / Codex CLI: `$soap`, select SOAP, or ask to use SOAP.
+- Claude Code: `/soap` when installed with the command wrapper.
+- Report prose follows the conversation language unless another language is requested. All skill documentation is English.
+- Markdown is saved under `docs/soap/` only for substantive findings or reusable practices. JSON export is optional; reporting is disabled by default.
+- Package: `@justinforfun/soap-skill` (prepared locally; not yet published by this change).
+
+```bash
+make build SKILL=soap
+make check
+make pack SKILL=soap
+make run SKILL=soap
+# Maintainer release, when ready:
+make publish SKILL=soap
+# After publication:
+npx @justinforfun/soap-skill
+```
+
+See [SOAP documentation](./skills/soap/README.md) for installation, privacy, the fixed reporting schema, and opt-in collection.
+
 ## Development
 
 Install dependencies:

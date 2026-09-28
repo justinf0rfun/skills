@@ -1,0 +1,4 @@
+interface:
+  display_name: "SOAP"
+  short_description: "Turn development friction into evidence-backed improvements"
+  default_prompt: "Use $soap to review this development task, trace avoidable friction to evidence, and propose concrete, scoped improvements."
