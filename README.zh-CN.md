@@ -86,7 +86,7 @@ SOAP reviews a development task across requirements, design, implementation, and
 - Claude Code: `/soap` when installed with the command wrapper.
 - Report prose follows the conversation language unless another language is requested. All skill documentation is English.
 - Markdown is saved under `docs/soap/` only for substantive findings or reusable practices. JSON export is optional; reporting is disabled by default.
-- Package: `@justinforfun/soap-skill` (prepared locally; not yet published by this change).
+- Package: `@justinforfun/soap-skill`.
 
 ```bash
 make build SKILL=soap
@@ -95,7 +95,7 @@ make pack SKILL=soap
 make run SKILL=soap
 # Maintainer release, when ready:
 make publish SKILL=soap
-# After publication:
+# Install from npm:
 npx @justinforfun/soap-skill
 ```
 

@@ -8,13 +8,13 @@ Review a development collaboration, trace avoidable friction to evidence, and pr
 
 From this repository, run `make build SKILL=soap` and `make run SKILL=soap`. The installer provides arrow-key navigation, Space to select tools, and Enter to confirm. Existing installations can be backed up before overwrite, overwritten, or skipped.
 
-Once the package is published:
+Install from npm:
 
 ```sh
 npx @justinforfun/soap-skill
 ```
 
-This change prepares the package; it does not publish it. Node.js 18+ runs the installer. JSON validation and optional reporting require Python 3.9+; ordinary conversational analysis does not.
+Node.js 18+ runs the installer. JSON validation and optional reporting require Python 3.9+; ordinary conversational analysis does not.
 
 | Tool | Installer destination | Invocation |
 |---|---|---|

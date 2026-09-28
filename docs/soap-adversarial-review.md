@@ -1,7 +1,7 @@
 # SOAP adversarial review
 
 Date: 2026-09-29
-Package: `@justinforfun/soap-skill@2.0.0`
+Package: `@justinforfun/soap-skill@1.0.0` (first public release; the audit used the provisional version label `2.0.0`, before release numbering was finalized).
 
 **Final independent release gate: 97/100. No remaining release-blocking defect was found in the tested scope.**
 
