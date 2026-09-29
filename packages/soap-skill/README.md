@@ -37,7 +37,7 @@ Report prose follows the user's conversation language unless another language is
 
 SOAP distinguishes missing information from unread, misunderstood, or ignored information. Normal exploration and new requirements are not automatically rework. It can report no evidenced friction or insufficient evidence without inventing recommendations.
 
-The chat response leads with the main finding and next useful change. Substantive findings or reusable practices produce a Markdown report in `docs/soap/`. JSON is generated only for requested export or enabled reporting. Proposed changes are not applied without authorization.
+The chat response leads with the main finding and next useful change. Substantive findings or reusable practices produce a Markdown report in `docs/soap/`. JSON is generated only for requested export or enabled reporting. Each recommendation includes an exact target, ready-to-use text or a minimal safe local patch, adoption steps, and an observable completion check. Missing information is named explicitly instead of replaced with generic advice. Proposed changes are not applied without authorization.
 
 ## Optional reporting
 

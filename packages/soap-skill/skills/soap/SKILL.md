@@ -55,7 +55,17 @@ Trace across stages: a constraint agreed during design and omitted during implem
 
 ## Propose the smallest useful change
 
-Give concrete, directly usable content, its target, applicability conditions, and a way to verify it. Prefer a domain reference or relevant test over a blanket rule to ask more questions. Match the intervention to the cause: more prompt detail does not fix failure to read existing instructions.
+Make each recommendation usable without another round of implementation design. Link it to the finding it addresses and provide:
+
+- **Target:** the exact repository-relative file and section/function, or the named workflow step that must change. Inspect the relevant target when available; do not invent paths or prescribe a duplicate of an existing rule.
+- **Ready-to-use change:** the actual replacement instruction, prompt text, command, checklist, or minimal proposed patch. A principle such as "clarify requirements" or "improve the release process" is not a deliverable.
+- **Execution:** the minimum ordered steps to adopt the change, using unchecked task items where useful. Do not mark them complete merely because the recommendation was written.
+- **Done when:** a concrete observable result and the check or command that demonstrates it. Distinguish a proposed check from a check actually run.
+- **Applicability:** when this change helps and any condition that limits it. Prefer a domain reference or relevant test over a blanket rule to ask more questions.
+
+Choose the smallest useful artifact for the cause; do not force a code patch when exact prose solves it. More prompt detail does not fix failure to read existing instructions. If the target or evidence is unavailable, name the specific missing input and give a bounded next inspection step; do not invent a patch or present a general principle as ready to apply.
+
+Before delivering, ask: "Can the user adopt this without deciding again what to change, where, or how to check it?" If not, complete the artifact or explicitly mark it blocked by missing information. Keep causal explanation concise enough that the recommendation's actual content and steps remain easy to find.
 
 Prioritize the most useful changes. Do not create recommendations when the evidence does not support one. Unknown causes may have no recommendation or a narrowly scoped evidence-gathering step. Do not turn a one-off preference into a universal instruction or add rules already present.
 
@@ -63,11 +73,11 @@ Default to proposing changes. Apply them only when the user chooses them or expl
 
 ## Deliver
 
-Minimize and redact all output before displaying or saving it, including titles, metadata, evidence, source locators, and recommendation targets. Do not include secrets, personal identities, private URLs, local absolute paths, full conversations, or source code in report content. Use repository-relative targets and descriptive source locators. Apply this even when no JSON is generated or uploaded.
+Minimize and redact all output before displaying or saving it, including titles, metadata, evidence, source locators, and recommendation targets. Do not include secrets, personal identities, private URLs, local absolute paths, full conversations, or bulk copies of existing source code in report content. Use repository-relative targets and descriptive source locators. Apply this even when no JSON is generated or uploaded. A local recommendation may include a minimal newly authored patch or command with only the necessary non-sensitive context; redact secrets and proprietary details. This exception does not authorize transmitting repository code or diffs in JSON uploads.
 
 Start in chat with the main conclusion, the strongest evidence, and the most useful next change. Clearly say when no avoidable friction was found within the available evidence, or when evidence is insufficient to judge. Do not equate these outcomes.
 
-When there are findings or reusable practices, write a concise Markdown report under `docs/soap/` in the current project (the current working directory when no project is identifiable). Include task scope, evidence limitations, findings with evidence and causal status, recommendations, and reusable practices. Omit empty sections. Do not embed the full conversation or source code. Never overwrite an earlier report.
+When there are findings or reusable practices, write a concise Markdown report under `docs/soap/` in the current project (the current working directory when no project is identifiable). Include task scope, evidence limitations, findings with evidence and causal status, recommendations, and reusable practices. Omit empty sections. Keep evidence summarized; reserve minimal safe snippets for the ready-to-use recommendation itself. Never overwrite an earlier report.
 
 Assign a UUID report ID and an explicit-timezone creation timestamp when each retrospective completes. Include both in a compact chat receipt, even for empty or chat-only results, and in the metadata of any saved Markdown. Link the exact saved artifact in that receipt when available. Use `YYYYMMDD-HHMMSS-<report_id>` as the file stem. Avoid task names and branch names in paths. When both Markdown and JSON exist, share the stem and report identity. If file writing is unavailable, deliver the report in chat and state that it was not saved.
 
